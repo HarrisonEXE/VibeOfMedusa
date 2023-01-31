@@ -1,8 +1,8 @@
 import time
-from MarimbaHit import MarimbaHit
+from Classes.MarimbaHit import MarimbaHit
 
 
-maxTimeBetween = 2  # seconds
+timeout = 2  # seconds
 
 
 def getManualInput():
@@ -22,13 +22,14 @@ def getManualInput():
         timeDifference = 0 if i == 0 else time.time() - baseTime
         baseTime = time.time()
 
-        if timeDifference > maxTimeBetween:
+        # Check for timeout
+        if timeDifference > timeout:
             print("You gotta be quicker than that. Try again!")
             notes = []
             i, baseTime = 0, 0
             continue
 
-        # Maybe make this not a classssss. Python is annoying
+        # TODO: Maybe make this not a class.
         notes.append(MarimbaHit(int(value), 127, timeDifference))
         i += 1
 

@@ -1,5 +1,5 @@
 import random
-from MarimbaHit import MarimbaHit
+from Classes.MarimbaHit import MarimbaHit
 
 global tempo
 

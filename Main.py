@@ -1,5 +1,5 @@
-from InputHandler import getManualInput
-from RobotHandler import playString, setup
+from Handlers.InputHandler import getManualInput
+from Handlers.RobotHandler import playString, setup
 
 # 1: Prepare Robots
 setup()

@@ -4,8 +4,8 @@ import serial
 # from xarm import XArmAPI
 from queue import Queue
 from threading import Thread
-from Helpers import createRandList, delay
-from TrajectoryGeneration import fifth_poly, spline_poly
+from Helpers.Helpers import createRandList, delay
+from Helpers.TrajectoryGeneration import fifth_poly, spline_poly
 
 
 # ------------------------ Robot Logistics ------------------------ #
