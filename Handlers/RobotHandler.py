@@ -66,7 +66,7 @@ def playString(degree):
 
 
 def playTestString(degree):
-    print("working ", degree)
+    print("Playing note ", degree)
     # loadQueues([degree], 'X')
 
 

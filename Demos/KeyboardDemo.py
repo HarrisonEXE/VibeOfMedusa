@@ -15,10 +15,13 @@ class KeyboardDemo(IDemo):
 
         setupRobots()
 
-        notes = getManualInput()
-        # print(notes)
-        for note in notes:
-            playString(note.degree)
+        phrase = getManualInput()
+        print(f"Recieved the following phrase: \n{phrase}")
+
+        # print(f"Aggregated onsets: \n {phrase.getAggregatedOnsets()}")
+
+        for i in range(len(phrase)):
+            playString()
 
     def announceStart(self):
         print(f"Now running {self.name}...")

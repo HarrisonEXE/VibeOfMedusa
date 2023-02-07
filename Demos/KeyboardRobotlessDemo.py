@@ -4,7 +4,7 @@ from Handlers.RobotHandler import playTestString
 
 
 # -- Class Description ------------------ #
-# Manual keyboard input and text output   #
+# Manual keyboard input and text output
 # --------------------------------------- #
 class KeyboardRobotlessDemo(IDemo):
     def __init__(self) -> None:
@@ -12,10 +12,13 @@ class KeyboardRobotlessDemo(IDemo):
 
     def start(self):
         self.announceStart()
-        notes = getManualInput()
-        # print(notes)
-        for note in notes:
-            playTestString(note.degree)
+
+        phrase = getManualInput()
+        print(f"Recieved the following phrase: \n{phrase}")
+
+        # print(f"Aggregated onsets: \n {phrase.getAggregatedOnsets()}")
+        for i in range(len(phrase)):
+            playTestString(phrase[i])
 
     def announceStart(self):
         print(f"Now running {self.name}...")

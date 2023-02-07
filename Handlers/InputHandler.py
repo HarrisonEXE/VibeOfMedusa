@@ -1,5 +1,5 @@
 import time
-from Classes.MarimbaHit import MarimbaHit
+from Classes.Phrase import Phrase
 
 
 timeout = 2  # seconds
@@ -8,29 +8,31 @@ timeout = 2  # seconds
 def getManualInput():
     print('Enter 5 numbers (1-5)')
 
-    notes = []
+    phrase = Phrase()
     i, baseTime = 0, 0
     while i < 5:
         value = input('>')
 
         # Input validation
         if value not in ["1", "2", "3", "4", "5"]:
-            print('Nahhhh, enter a number between 1 - 5 (inclusive):')
+            print('Nahhhh, only enter numbers between 1 - 5 (inclusive):')
+            phrase = Phrase()
+            i, baseTime = 0, 0
             continue
 
         # Get the rythym by pulling the timing of the inputs
-        timeDifference = 0 if i == 0 else time.time() - baseTime
+        onset = 0 if i == 0 else time.time() - baseTime
         baseTime = time.time()
 
         # Check for timeout
-        if timeDifference > timeout:
+        if onset > timeout:
             print("You gotta be quicker than that. Try again!")
-            notes = []
+            phrase = Phrase()
             i, baseTime = 0, 0
             continue
 
         # TODO: Maybe make this not a class.
-        notes.append(MarimbaHit(int(value), 127, timeDifference))
+        phrase.append(int(value), onset)
         i += 1
 
-    return notes
+    return phrase
