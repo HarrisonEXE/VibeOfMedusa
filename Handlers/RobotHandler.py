@@ -9,7 +9,7 @@ from Helpers.TrajectoryGeneration import fifth_poly, spline_poly
 
 
 # ------------------------ Robot Logistics ------------------------ #
-def setup():
+def setupRobots():
     for i in range(len(arms)):
         arms[i].set_simulation_robot(on_off=False)
         arms[i].motion_enable(enable=True)
@@ -62,6 +62,10 @@ def waitForRobots():
 
 # ------------------------ Client Facing ------------------------ #
 def playString(degree):
+    loadQueues([degree], 'X')
+
+
+def playTestString(degree):
     print("working ", degree)
     # loadQueues([degree], 'X')
 
@@ -90,24 +94,25 @@ def lightController():
 
 def strumController(queue, robotNum):
     i = 0
+
+    # TODO: Move to seperate method
     upStrumTraj = fifth_poly(-strumD / 2, strumD / 2, speed)
     downStrumTraj = fifth_poly(strumD / 2, -strumD / 2, speed)
     strumTrajectories = [upStrumTraj, downStrumTraj]
 
     while True:
-        variation = queue.get()
         print("Strum Command Received for Robot " + str(robotNum))
 
         strumDirection = i % 2
 
-        time.sleep(delayArray[variation][strumDirection, robotNum])
+        time.sleep(delayArray[strumDirection, robotNum])
         lightQ.put(robotNum)
         strumbot(robotNum, strumTrajectories[strumDirection])
 
         i += 1
 
 
-def drumController(inq, num):
+def drumController(queue, num):
     drumQ.put(1)
     trajz = spline_poly(325, 35, .08, .08, 0.01)
     trajp = spline_poly(-89, -28, .08, .08, 0.01)
@@ -121,7 +126,7 @@ def drumController(inq, num):
     i = 0
     while True:
         i += 1
-        play = inq.get()
+        play = queue.get()
 
         if i % 3 == 1:
             drumbot(trajz, trajp, num)
@@ -222,6 +227,7 @@ IP = [IP0, IP1, IP2, IP3, IP4]
 
 
 # --------------- Arm Addresses --------------- #
+# TODO: Consider adding drum arm to arms list
 # arm0 = XArmAPI('192.168.1.208')
 # arm1 = XArmAPI('192.168.1.226')
 # arm2 = XArmAPI('192.168.1.244')

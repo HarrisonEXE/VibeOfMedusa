@@ -1,3 +1,7 @@
+# ----------------------- Notes --------------------- #
+# TODO: Not a huge fan of the misc helpers. Refactor  #
+# --------------------------------------------------- #
+
 import random
 import time
 

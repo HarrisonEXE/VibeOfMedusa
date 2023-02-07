@@ -1,7 +1,7 @@
 import math
 import numpy as np
 
-
+# For strings
 def fifth_poly(q_i, q_f, t):
     traj_t = np.arange(0, t, 0.004)
     dq_i = 0
@@ -21,7 +21,7 @@ def fifth_poly(q_i, q_f, t):
         traj_t ** 3 + a4 * traj_t ** 4 + a5 * traj_t ** 5
     return traj_pos
 
-
+# For drums
 def spline_poly(q_i, q_f, ta, tt, ts):
     # t is total time
 
