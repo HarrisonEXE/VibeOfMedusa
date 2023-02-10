@@ -65,7 +65,7 @@ def playString(noteInfo):
     degree, delay = noteInfo
 
     print(f"Loading note {degree} with a {delay} delay")
-    loadQueue(degree, delay)
+    loadQueue(degree, 'X')
 
 
 def playTestString(noteInfo):
@@ -202,7 +202,6 @@ global notes
 global lightMode
 global lightQ
 global arduino
-global delayArray
 
 
 # --------------- Light Attributes --------------- #
@@ -220,9 +219,6 @@ randList5 = createRandList(4)
 ROBOT = "xArms"
 PORT = 5003
 speed = 0.25
-defaultArray = np.array([[0.15, 0.15, 0.15, 0.15, 0.15, 0.0, 0.0], [
-    0.1, 0.15, 0.1, 0.15, 0.125, 0.0, 0.0]])
-
 
 # --------------- Initial Positinos --------------- #
 strumD = 30

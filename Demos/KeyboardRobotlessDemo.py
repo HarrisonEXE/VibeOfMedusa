@@ -1,14 +1,12 @@
 from Demos.IDemo import IDemo
 from Handlers.InputHandler import getManualInput
 from Handlers.RobotHandler import playTestString
+from Helpers.NoteRandomizer import randomizer
 
 
-# -- Class Description ------------------ #
-# Manual keyboard input and text output
-# --------------------------------------- #
 class KeyboardRobotlessDemo(IDemo):
     def __init__(self) -> None:
-        self.name = "Keyboard Robotless Demo"
+        self.name = "Keyboard Robotless Demo with Matching Rhythm and Notes"
 
     def start(self):
         self.announceStart()
