@@ -16,8 +16,6 @@ class KeyboardRobotlessDemo(IDemo):
         phrase = getManualInput()
         print(f"Recieved the following phrase: \n{phrase}")
 
-        print(f"Aggregated onsets: \n {phrase.aggregated_onsents}")
-
         for i in range(len(phrase)):
             playTestString(phrase[i])
 

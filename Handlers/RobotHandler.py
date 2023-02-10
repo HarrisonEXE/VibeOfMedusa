@@ -61,18 +61,26 @@ def waitForRobots():
 
 
 # ------------------------ Client Facing ------------------------ #
-def playString(degree):
-    loadQueues([degree], 'X')
+def playString(noteInfo):
+    degree, delay = noteInfo
+
+    print(f"Loading note {degree} with a {delay} delay")
+    loadQueue(degree, delay)
 
 
-def playTestString(degree):
-    print("Playing note ", degree)
-    # loadQueues([degree], 'X')
+def playTestString(noteInfo):
+    degree, delay = noteInfo
+    time.sleep(delay)
+    print(f"Playing note {degree} with a {delay} delay")
 
 
-def loadQueues(indexes, value):
+def loadQueue(index, delay):
+    qList[index].put(delay)
+
+
+def loadQueues(indexes, delays):
     for i in indexes:
-        qList[i].put(value)
+        qList[i].put(delays[i])
 
 
 # ------------------------ Controllers ------------------------ #
@@ -105,7 +113,7 @@ def strumController(queue, robotNum):
 
         strumDirection = i % 2
 
-        time.sleep(delayArray[strumDirection, robotNum])
+        # time.sleep(delayArray[strumDirection, robotNum])
         lightQ.put(robotNum)
         strumbot(robotNum, strumTrajectories[strumDirection])
 

@@ -18,10 +18,8 @@ class KeyboardDemo(IDemo):
         phrase = getManualInput()
         print(f"Recieved the following phrase: \n{phrase}")
 
-        # print(f"Aggregated onsets: \n {phrase.getAggregatedOnsets()}")
-
         for i in range(len(phrase)):
-            playString()
+            playString(phrase[i])
 
     def announceStart(self):
         print(f"Now running {self.name}...")

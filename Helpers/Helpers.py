@@ -15,7 +15,3 @@ def createRandList(size):
 
 def delay():
     time.sleep(0.013)
-
-
-def generateDelayArray(onsets):
-    aggregated_onsets = getAggregatedOnsets(onsets)
