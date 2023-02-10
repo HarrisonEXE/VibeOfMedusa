@@ -6,6 +6,7 @@ class Phrase:
         self.name = name
         self.notes = notes if notes is not None else []
         self.onsets = onsets if onsets is not None else []
+        self.aggregated_onsents = self.getAggregatedOnsets() if onsets is not None else []
         self.tempo = tempo
 
     def __str__(self):
@@ -27,22 +28,27 @@ class Phrase:
             self.notes[key] = value[0]
             self.onsets[key] = value[1]
 
-    def setAggregatedOnsets(self):
-        aggregate = 0
-        aggregated_onsets = []
-        for onset in self.onsets:
-            aggregate += onset
-            aggregated_onsets.append(aggregate)
-
     def get(self):
         return self.notes, self.onsets
 
-    def get_raw_notes(self):
+    def getRawNotes(self):
         notes = []
         for note in self.notes:
             notes.append(note.pitch)
         return np.array(notes)
 
+    def getAggregatedOnsets(onsets):
+        aggregate = 0
+        aggregated_onsets = []
+        for onset in onsets:
+            aggregate += onset
+            aggregated_onsets.append(aggregate)
+        return aggregated_onsets
+
     def append(self, note, onset):
         self.notes.append(note)
         self.onsets.append(onset)
+        if not self.aggregated_onsents:
+            self.aggregated_onsents.append(onset)
+        else:
+            self.aggregated_onsents.append(onset + self.aggregated_onsents[-1])

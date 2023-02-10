@@ -19,12 +19,3 @@ def delay():
 
 def generateDelayArray(onsets):
     aggregated_onsets = getAggregatedOnsets(onsets)
-
-
-def getAggregatedOnsets(onsets):
-    aggregate = 0
-    aggregated_onsets = []
-    for onset in onsets:
-        aggregate += onset
-        aggregated_onsets.append(aggregate)
-    return aggregated_onsets
