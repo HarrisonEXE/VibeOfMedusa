@@ -1,7 +1,7 @@
 from Demos.IDemo import IDemo
 from Handlers.InputHandler import getManualInput
 from Handlers.RobotHandler import playTestString
-from Helpers.NoteRandomizer import randomizer
+from Helpers.NoteRandomizer import basic_randomizer, beat_randomizer
 
 
 class KeyboardRobotlessDemo(IDemo):
@@ -17,8 +17,10 @@ class KeyboardRobotlessDemo(IDemo):
         for i in range(len(phrase)):
             playTestString(phrase[i])
         
+        ### generates entirely random phrase based off of notes played ###
         print("randomizing...")
-        randomizer(phrase)
+        random_phrase = basic_randomizer(phrase)
+        random_phrase2 = beat_randomizer(phrase)
 
     def announceStart(self):
         print(f"Now running {self.name}...")
