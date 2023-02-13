@@ -30,9 +30,9 @@ class KeyboardDemo(IDemo):
         self.announceStart()
 
         setupRobots()
-
+        print("robot setup complete")
         phrase = getManualInput()
-        print(f"Recieved the following phrase: \n{phrase}")
+        print(f"Received the following phrase: \n{phrase}")
 
         for i in range(len(phrase)):
             playString(phrase[i])

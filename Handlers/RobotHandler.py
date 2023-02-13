@@ -65,7 +65,7 @@ def playString(noteInfo):
     degree, delay = noteInfo
 
     print(f"Loading note {degree} with a {delay} delay")
-    loadQueue(degree, 'X')
+    loadQueue(degree, delay)
 
 
 def playTestString(noteInfo):
@@ -75,7 +75,7 @@ def playTestString(noteInfo):
 
 
 def loadQueue(index, delay):
-    qList[index].put(delay)
+    qList[index-1].put(delay)
 
 
 def loadQueues(indexes, delays):

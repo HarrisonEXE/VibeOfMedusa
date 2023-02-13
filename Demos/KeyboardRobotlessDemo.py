@@ -16,6 +16,9 @@ class KeyboardRobotlessDemo(IDemo):
 
         for i in range(len(phrase)):
             playTestString(phrase[i])
+        
+        print("randomizing...")
+        randomizer(phrase)
 
     def announceStart(self):
         print(f"Now running {self.name}...")
