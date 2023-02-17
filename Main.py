@@ -8,7 +8,7 @@ class MedusaDemo:
         self.keyboard_robotless_demo = KeyboardRobotlessDemo()
 
 
-        self.current_demo = self.keyboard_robotless_demo
+        self.current_demo = self.keyboard_demo
 
     def run(self):
         self.current_demo.start()
