@@ -18,9 +18,10 @@ class KeyboardRobotlessDemo(IDemo):
             playTestString(phrase[i])
         
         ### generates entirely random phrase based off of notes played ###
-        print("randomizing...")
         random_phrase = basic_randomizer(phrase)
-        random_phrase2 = beat_randomizer(phrase)
+        for i in range(len(random_phrase)):
+            playTestString(random_phrase[i])
+        #random_phrase2 = beat_randomizer(phrase)
 
     def announceStart(self):
         print(f"Now running {self.name}...")
