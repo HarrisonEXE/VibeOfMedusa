@@ -1,7 +1,7 @@
 import time
 import numpy as np
 import serial
-from xarm import XArmAPI
+#from xarm import XArmAPI
 from queue import Queue
 from threading import Thread
 from Helpers.Helpers import createRandList, delay
@@ -73,7 +73,7 @@ def playString(noteInfo):
 
 def playTestString(noteInfo):
     degree, delay = noteInfo
-    time.sleep(delay)
+    #time.sleep(delay)
     print(f"Playing note {degree} with a {delay} delay")
 
 
@@ -237,18 +237,18 @@ IP = [IP0, IP1, IP2, IP3, IP4]
 
 # --------------- Arm Addresses --------------- #
 # TODO: Consider adding drum arm to arms list
-arm0 = XArmAPI('192.168.1.208')
-arm1 = XArmAPI('192.168.1.226')
-arm2 = XArmAPI('192.168.1.244')
-arm3 = XArmAPI('192.168.1.203')
-arm4 = XArmAPI('192.168.1.237')
-arms = [arm0, arm1, arm2, arm3, arm4]
+# arm0 = XArmAPI('192.168.1.208')
+# arm1 = XArmAPI('192.168.1.226')
+# arm2 = XArmAPI('192.168.1.244')
+# arm3 = XArmAPI('192.168.1.203')
+# arm4 = XArmAPI('192.168.1.237')
+# arms = [arm0, arm1, arm2, arm3, arm4]
 
 # armDrum = XArmAPI('192.168.1.204')
 # drums = [armDrum]
 
 # ---- PC Debugging ---- #
-# arms = []
+arms = []
 # drums = []
 
 # --------------- Queues --------------- #

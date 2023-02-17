@@ -1,25 +1,34 @@
-from Demos.IDemo import IDemo
 from Handlers.InputHandler import getManualInput
-from Handlers.RobotHandler import playString, setupRobots
+from Handlers.RobotHandler import (playString, setupRobots, startThreads,
+                                   turnOnLive)
+from Helpers.NoteRandomizer import beat_randomizer
+
+from Demos.IDemo import IDemo
 
 
-class KeyboardRandomNoteDemo(IDemo):
+class KeyboardDemo(IDemo):
+
     def __init__(self) -> None:
-        self.name = "Keyboard Demo with Randomized Notes and Matching Rhythm"
+        self.name = "Keyboard Demo with Matching Rhythm and Notes"
 
     def start(self):
         self.announceStart()
 
         setupRobots()
+        print("robot setup complete")
 
-        phrase = getManualInput()
-        print(f"Recieved the following phrase: \n{phrase}")
+        startThreads()
+        print("threads started")
 
-        phrase.onsets = [3, 3, 3, 3, 3]
-        print(f"Changed to the following phrase: \n{phrase}")
+        turnOnLive()
+        print("live mode activated")
 
-        for i in range(len(phrase)):
-            playString(phrase[i])
+        input_phrase = getManualInput()
+        random_phrase = beat_randomizer(input_phrase)
+        print(f"Received the following phrase: \n{random_phrase}")
+
+        for i in range(len(random_phrase)):
+            playString(random_phrase[i])
 
     def announceStart(self):
         print(f"Now running {self.name}...")

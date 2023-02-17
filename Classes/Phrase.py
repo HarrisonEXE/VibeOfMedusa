@@ -48,7 +48,7 @@ class Phrase:
     def append(self, note, onset):
         self.notes.append(note)
         self.onsets.append(onset)
-        if not self.aggregated_onsents:
-            self.aggregated_onsents.append(onset)
+        if not self.aggregated_onsets:
+            self.aggregated_onsets.append(onset)
         else:
-            self.aggregated_onsents.append(onset + self.aggregated_onsents[-1])
+            self.aggregated_onsets.append(onset + self.aggregated_onsets[-1])
