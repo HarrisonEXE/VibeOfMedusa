@@ -6,7 +6,7 @@ from Helpers.NoteRandomizer import beat_randomizer
 from Demos.IDemo import IDemo
 
 
-class KeyboardDemo(IDemo):
+class KeyboardRandomDemo(IDemo):
 
     def __init__(self) -> None:
         self.name = "Keyboard Demo with Matching Rhythm and Notes"
