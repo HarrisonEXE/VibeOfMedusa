@@ -66,7 +66,9 @@ def playString(noteInfo):
 
     time.sleep(delay)
     print(f"Loading note {degree} with a {delay} delay")
-    loadQueue(degree, delay)
+    # if degree is 0, then rest and dont load queue w note
+    if (degree != 0):
+        loadQueue(degree, delay)
 
 
 def playTestString(noteInfo):
