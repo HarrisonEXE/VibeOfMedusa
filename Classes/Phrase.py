@@ -6,7 +6,7 @@ class Phrase:
         self.name = name
         self.notes = notes if notes is not None else []
         self.onsets = onsets if onsets is not None else []
-        self.aggregated_onsents = self.getAggregatedOnsets() if onsets is not None else []
+        self.aggregated_onsets = self.getAggregatedOnsets() if onsets is not None else []
         self.tempo = tempo
 
     def __str__(self):
