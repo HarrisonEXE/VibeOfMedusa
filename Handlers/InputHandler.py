@@ -1,5 +1,5 @@
 import time
-from Classes.Phrase import Phrase
+from Classes.OldPhrase import Phrase
 
 
 timeout = 2  # seconds

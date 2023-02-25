@@ -63,9 +63,15 @@ def waitForRobots():
 # ------------------------ Client Facing ------------------------ #
 def playString(noteInfo):
     degree, delay = noteInfo
+    degree -= 1
 
     print(f"Loading note {degree} with a {delay} delay")
     loadQueue(degree, 'X')
+
+
+def playStringTemp(noteInfo):
+    print(f"Loading note {noteInfo}")
+    loadQueue(noteInfo, 'X')
 
 
 def playTestString(noteInfo):

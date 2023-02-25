@@ -4,25 +4,6 @@ from Handlers.RobotHandler import playString, setupRobots
 
 
 class KeyboardDemo(IDemo):
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     def __init__(self) -> None:
         self.name = "Keyboard Demo with Matching Rhythm and Notes"
 
