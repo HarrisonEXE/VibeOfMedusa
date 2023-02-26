@@ -69,8 +69,9 @@ def playString(noteInfo):
     loadQueue(degree, 'X')
 
 
-def playStringTemp(noteInfo):
-    print(f"Loading note {noteInfo}")
+def playStringTemp(noteInfo, delay):
+    print(f"Loading note {noteInfo} with a {delay} second delay")
+    time.sleep(delay)
     loadQueue(noteInfo, 'X')
 
 

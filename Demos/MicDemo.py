@@ -106,14 +106,24 @@ class MicDemo(IDemo):
         self._process()
 
     def perform(self, phrase):
-        # TODO: optimize lmaooooo
-        print(phrase.onsets)
+        # TODO: optimize this shit lmaooooo
         for i in range(len(phrase)):
             note = phrase.get_raw_notes()[i]
-            scale = [69, 72, 74, 76, 79]
-            new_note = scale.index(min(scale, key=lambda x: abs(x-note)))
+            corrected_note = self.correct_note(note)
 
-            playStringTemp(new_note)
+            delay = phrase.onsets[i]
+
+            playStringTemp(corrected_note, delay)
+
+    # Note Info:
+    # 9 - A
+    # 0 - C
+    # 2 - D
+    # 4 - E
+    # 7 - G
+    def correct_note(self, note):
+        scale = [9, 0, 2, 4, 7]
+        return scale.index(min(scale, key=lambda x: abs(x - (note % 12))))
 
     def listener(self, in_data: bytes, frame_count: int, time_info: dict[str, float], status: int) -> tuple[
             bytes, int]:

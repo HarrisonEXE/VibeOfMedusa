@@ -11,7 +11,7 @@ class MedusaDemo:
         self.keyboard_random_note_demo = KeyboardRandomNoteDemo()
         self.mic_demo = MicDemo()
 
-        self.current_demo = self.keyboard_demo
+        self.current_demo = self.mic_demo
 
     def run(self):
         self.current_demo.start()
