@@ -7,8 +7,6 @@ class Phrase:
         self.notes = notes if notes is not None else []
         self.onsets = onsets if onsets is not None else []
         self.tempo = tempo
-        self.is_korvai = name == "korvai"
-        self.is_intro = name == "intro"
 
     def get(self):
         return self.notes, self.onsets

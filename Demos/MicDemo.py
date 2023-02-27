@@ -107,13 +107,20 @@ class MicDemo(IDemo):
 
     def perform(self, phrase):
         # TODO: optimize this shit lmaooooo
+        prev_start = 0
+        m = 2
+        now = time.time()
         for i in range(len(phrase)):
-            note = phrase.get_raw_notes()[i]
-            corrected_note = self.correct_note(note)
-
-            delay = phrase.onsets[i]
-
-            playStringTemp(corrected_note, delay)
+            note = phrase.notes[i]
+            corrected_note = self.correct_note(note.pitch)
+            dly = max(0, ((note.start - prev_start) * m) - (time.time() - now))
+            print(f"Delaying by {dly} seconds")
+            self.event.wait(dly)
+            now = time.time()
+            self.lock.acquire()
+            playStringTemp(corrected_note)
+            self.lock.release()
+            prev_start = note.start
 
     # Note Info:
     # 9 - A
@@ -121,6 +128,7 @@ class MicDemo(IDemo):
     # 2 - D
     # 4 - E
     # 7 - G
+
     def correct_note(self, note):
         scale = [9, 0, 2, 4, 7]
         return scale.index(min(scale, key=lambda x: abs(x - (note % 12))))
@@ -139,7 +147,7 @@ class MicDemo(IDemo):
         if activation > self.activation_threshold:
 
             ''' Makes for a cool visual - Harrison '''
-            # print(activation)
+            print(activation)
 
             self.playing = True
             self.wait_count = 0
