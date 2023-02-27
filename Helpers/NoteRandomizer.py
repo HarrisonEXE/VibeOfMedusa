@@ -38,3 +38,17 @@ def beat_randomizer(phrase):
             random_phrase.append(notes[(i + 1) % length], 4 * note_length - random_delay) if eighth_or_dotted == 1 else  random_phrase.append(notes[(i + 1) % length], random_delay)
 
     return random_phrase
+
+def new_randomizer(phrase):
+    print("testing the new randomizer")
+    notes = phrase.notes
+    onsets = phrase.onsets
+    random_phrase = Phrase()
+    for i in range(0,8):
+        note_selector = random.randint(0, 4)
+        onset_selector = random.randint(0, 4)
+        if (onsets[onset_selector] < .005):
+            random_phrase.append(notes[note_selector], .3)
+        else:
+            random_phrase.append(notes[note_selector], onsets[onset_selector])
+    return random_phrase

@@ -244,8 +244,8 @@ arm3 = XArmAPI('192.168.1.203')
 arm4 = XArmAPI('192.168.1.237')
 arms = [arm0, arm1, arm2, arm3, arm4]
 
-armDrum = XArmAPI('192.168.1.204')
-drums = [armDrum]
+# armDrum = XArmAPI('192.168.1.204')
+# drums = [armDrum]
 
 # ---- PC Debugging ---- #
 #arms = []
