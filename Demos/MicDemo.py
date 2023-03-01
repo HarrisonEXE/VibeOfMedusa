@@ -6,7 +6,7 @@ from threading import Thread, Lock, Event
 from Classes.Phrase import Phrase
 from Classes.audioDevice import AudioDevice
 from Demos.IDemo import IDemo
-from Handlers.RobotHandler import playString, playStringTemp
+from Handlers.RobotHandler import playString, playStringTemp, setupRobots, startThreads, turnOnLive
 from Helpers.audioToMidi import AudioMidiConverter
 
 
@@ -43,7 +43,12 @@ class MicDemo(IDemo):
             raga_map=[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], sr=sr, frame_size=frame_size)
 
     def start(self):
+        setupRobots()
+        startThreads()
+        turnOnLive()
+
         self.announceStart()
+
         if self.process_thread.is_alive():
             self.process_thread.join()
         self.lock.acquire()

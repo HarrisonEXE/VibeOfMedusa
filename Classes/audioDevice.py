@@ -7,7 +7,9 @@ import pyaudio
 
 
 class AudioDevice:
-    def __init__(self, listener, rate=48000, frame_size=2400, input_dev_name='Line (3- AudioBox USB 96)', channels=1):
+    # AudioBox USB 96: Audio (hw:2,0)
+    # Line (3- AudioBox USB 96)
+    def __init__(self, listener, rate=48000, frame_size=2400, input_dev_name='AudioBox USB 96: Audio (hw:2,0)', channels=1):
         self.input_device_id = -1
         self.listener = listener
         self.p = pyaudio.PyAudio()
@@ -24,6 +26,7 @@ class AudioDevice:
     def _get_dev_id(self, input_device_name):
         for i in range(self.p.get_device_count()):
             info = self.p.get_device_info_by_index(i)
+            # print(info)
             if info['name'] == input_device_name:
                 self.input_device_id = i
 

@@ -2,6 +2,7 @@ from Demos.KeyboardDemo import KeyboardDemo
 from Demos.KeyboardRandomNoteDemo import KeyboardRandomNoteDemo
 from Demos.KeyboardRobotlessDemo import KeyboardRobotlessDemo
 from Demos.MicDemo import MicDemo
+from Handlers.RobotHandler import startThreads, setupRobots
 
 
 class MedusaDemo:
@@ -11,9 +12,12 @@ class MedusaDemo:
         self.keyboard_random_note_demo = KeyboardRandomNoteDemo()
         self.mic_demo = MicDemo()
 
-        self.current_demo = self.mic_demo
+        self.current_demo = self.keyboard_demo
+        # self.current_demo = self.mic_demo
 
     def run(self):
+        # setupRobots()
+        # startThreads()
         self.current_demo.start()
 
 

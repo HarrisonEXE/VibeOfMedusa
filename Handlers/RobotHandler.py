@@ -1,7 +1,7 @@
 import time
 import numpy as np
 import serial
-# from xarm import XArmAPI
+from xarm import XArmAPI
 from queue import Queue
 from threading import Thread
 from Helpers.Helpers import createRandList, delay
@@ -65,6 +65,7 @@ def playString(noteInfo):
     degree, delay = noteInfo
     degree -= 1
 
+    time.sleep(delay)
     print(f"Loading note {degree} with a {delay} delay")
     loadQueue(degree, 'X')
 
@@ -90,7 +91,7 @@ def loadQueues(indexes, delays):
 
 
 # ------------------------ Controllers ------------------------ #
-def lightController():
+def lightController(lightQ):
     while True:
         if lightMode == 0:  # gradient mode
             sendSyncVal('gradient')
@@ -115,12 +116,13 @@ def strumController(queue, robotNum):
     strumTrajectories = [upStrumTraj, downStrumTraj]
 
     while True:
+        queue.get()
         print("Strum Command Received for Robot " + str(robotNum))
 
         strumDirection = i % 2
 
         # time.sleep(delayArray[strumDirection, robotNum])
-        lightQ.put(robotNum)
+        # lightQ.put(robotNum)
         strumbot(robotNum, strumTrajectories[strumDirection])
 
         i += 1
@@ -160,6 +162,7 @@ def strumbot(numarm, traj):
     initial_time = time.time()
     for i in range(len(traj)):
         j_angles[4] = traj[i]
+        print("ok")
         arms[numarm].set_servo_angle_j(angles=j_angles, is_radian=False)
 
         while track_time < initial_time + 0.004:
@@ -228,28 +231,28 @@ speed = 0.25
 
 # --------------- Initial Positinos --------------- #
 strumD = 30
-IP0 = [-1, 87.1, -2, 126.5, -strumD / 2, 51.7, -45]
-IP1 = [2.1, 86.3, 0, 127.1, -strumD / 2, 50.1, -45]
-IP2 = [1.5, 81.6, 0.0, 120, -strumD / 2, 54.2, -45]
-IP3 = [2.5, 81, 0, 117.7, -strumD / 2, 50.5, -45]
-IP4 = [-1.6, 81.8, 0, 120, -strumD / 2, 50.65, -45]
+IP0 = [-0.25, 87.38, -2, 126.5, -strumD / 2, 51.73, -45]
+IP1 = [2.62, 86.2, 0, 127.1, -strumD / 2, 50.13, -45]
+IP2 = [1.3, 81.68, 0.0, 120, -strumD / 2, 54.2, -45]
+IP3 = [-1.4, 83.8, 0, 120, -strumD / 2, 50.65, -45]
+IP4 = [-1.8, 81.8, 0, 120, -strumD / 2, 50.65, -45]
 IP = [IP0, IP1, IP2, IP3, IP4]
 
 
 # --------------- Arm Addresses --------------- #
 # TODO: Consider adding drum arm to arms list
-# arm0 = XArmAPI('192.168.1.208')
-# arm1 = XArmAPI('192.168.1.226')
-# arm2 = XArmAPI('192.168.1.244')
-# arm3 = XArmAPI('192.168.1.203')
-# arm4 = XArmAPI('192.168.1.237')
-# arms = [arm0, arm1, arm2, arm3, arm4]
+arm0 = XArmAPI('192.168.1.208')
+arm1 = XArmAPI('192.168.1.226')
+arm2 = XArmAPI('192.168.1.244')
+arm3 = XArmAPI('192.168.1.203')
+arm4 = XArmAPI('192.168.1.237')
+arms = [arm0, arm1, arm2, arm3, arm4]
 
 # armDrum = XArmAPI('192.168.1.204')
 # drums = [armDrum]
 
 # ---- PC Debugging ---- #
-arms = []
+# arms = []
 drums = []
 
 # --------------- Queues --------------- #
@@ -284,8 +287,9 @@ def startThreads():
     xArm2.start()
     xArm3.start()
     xArm4.start()
-    xArmDrum.start()
-    lights.start()
+    # xArmDrum.start()
+    # lights.start()
+    print("Threads started.")
 
 
 # --------------- Getter Methods --------------- #

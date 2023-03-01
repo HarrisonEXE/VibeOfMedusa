@@ -1,6 +1,6 @@
 from Demos.IDemo import IDemo
 from Handlers.InputHandler import getManualInput
-from Handlers.RobotHandler import playString, setupRobots
+from Handlers.RobotHandler import playString, setupRobots, startThreads, turnOnLive
 
 
 class KeyboardDemo(IDemo):
@@ -11,6 +11,8 @@ class KeyboardDemo(IDemo):
         self.announceStart()
 
         setupRobots()
+        startThreads()
+        turnOnLive()
 
         phrase = getManualInput()
         print(f"Recieved the following phrase: \n{phrase}")
