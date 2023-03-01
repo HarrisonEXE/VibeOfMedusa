@@ -1,0 +1,127 @@
+Index: Main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from Demos.KeyboardDemo import KeyboardDemo\nfrom Demos.KeyboardRandomNoteDemo import KeyboardRandomNoteDemo\nfrom Demos.KeyboardRobotlessDemo import KeyboardRobotlessDemo\nfrom Demos.MicDemo import MicDemo\n\n\nclass MedusaDemo:\n    def __init__(self):\n        self.keyboard_demo = KeyboardDemo()\n        self.keyboard_robotless_demo = KeyboardRobotlessDemo()\n        self.keyboard_random_note_demo = KeyboardRandomNoteDemo()\n        self.mic_demo = MicDemo()\n\n        self.current_demo = self.mic_demo\n\n    def run(self):\n        self.current_demo.start()\n\n\nif __name__ == '__main__':\n    demo = MedusaDemo()\n    demo.run()\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Main.py b/Main.py
+--- a/Main.py	(revision 1f054846ff13a3e75dc307e1fef490dcc4df5966)
++++ b/Main.py	(date 1677511319822)
+@@ -9,9 +9,9 @@
+         self.keyboard_demo = KeyboardDemo()
+         self.keyboard_robotless_demo = KeyboardRobotlessDemo()
+         self.keyboard_random_note_demo = KeyboardRandomNoteDemo()
+-        self.mic_demo = MicDemo()
++        # self.mic_demo = MicDemo()
+ 
+-        self.current_demo = self.mic_demo
++        self.current_demo = self.keyboard_demo
+ 
+     def run(self):
+         self.current_demo.start()
+Index: Handlers/RobotHandler.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import time\nimport numpy as np\nimport serial\n# from xarm import XArmAPI\nfrom queue import Queue\nfrom threading import Thread\nfrom Helpers.Helpers import createRandList, delay\nfrom Helpers.TrajectoryGeneration import fifth_poly, spline_poly\n\n\n# ------------------------ Robot Logistics ------------------------ #\ndef setupRobots():\n    for i in range(len(arms)):\n        arms[i].set_simulation_robot(on_off=False)\n        arms[i].motion_enable(enable=True)\n        arms[i].clean_warn()\n        arms[i].clean_error()\n        arms[i].set_mode(0)\n        arms[i].set_state(0)\n        arms[i].set_servo_angle(angle=IP[i], wait=False, speed=20, acceleration=0.25,\n                                is_radian=False)\n    print(\"Ready to start.\")\n\n\ndef moveToStart(index):\n    arms[index].set_servo_angle(angle=[0.0, 0.0, 0.0, 1.57, 0.0, 0, 0.0], wait=False, speed=0.4, acceleration=0.25,\n                                is_radian=True)\n\n\ndef moveToStrumPos(index):\n    arms[index].set_servo_angle(angle=IP[index], wait=False,\n                                speed=20, acceleration=0.25, is_radian=False)\n\n\ndef turnOffLive():\n    for i in range(len(arms)):\n        arms[i].set_mode(0)\n        arms[i].set_state(0)\n        moveToStart(i)\n    waitForRobots()\n\n\ndef turnOnLive():\n    for i in range(len(arms)):\n        moveToStrumPos(i)\n\n    waitForRobots()\n\n    for i in range(len(arms)):\n        arms[i].set_mode(1)\n        arms[i].set_state(0)\n\n\ndef waitForRobots():\n    not_safe_to_continue = True\n    while not_safe_to_continue:\n        not_safe_to_continue = False\n        for arm in arms:\n            if arm.get_is_moving():\n                not_safe_to_continue = True\n\n\n# ------------------------ Client Facing ------------------------ #\ndef playString(noteInfo):\n    degree, delay = noteInfo\n    degree -= 1\n\n    print(f\"Loading note {degree} with a {delay} delay\")\n    loadQueue(degree, 'X')\n\n\ndef playStringTemp(noteInfo):\n    print(f\"Loading note {noteInfo}\")\n    loadQueue(noteInfo, 'X')\n\n\ndef playTestString(noteInfo):\n    degree, delay = noteInfo\n    time.sleep(delay)\n    print(f\"Playing note {degree} with a {delay} delay\")\n\n\ndef loadQueue(index, delay):\n    qList[index].put(delay)\n\n\ndef loadQueues(indexes, delays):\n    for i in indexes:\n        qList[i].put(delays[i])\n\n\n# ------------------------ Controllers ------------------------ #\ndef lightController():\n    while True:\n        if lightMode == 0:  # gradient mode\n            sendSyncVal('gradient')\n            listSend(getAngles(2), randList1)  # [2, 3, 4, 5])\n            listSend(getAngles(0), randList2)  # [1, 2, 3, 4, 5, 6])\n            listSend(getAngles(3), randList3)  # [1, 2, 3, 4, 5, 6])\n            listSend(getAngles(1), randList4)  # [1, 2, 3, 4, 5, 6])\n            listSend(getAngles(4), randList5)  # [2, 3, 4, 5])\n\n        if lightMode == 1:  # flash mode\n            received = lightQ.get()\n            sendSyncVal('flash')\n            sendSyncVal(str(received + 1))\n\n\ndef strumController(queue, robotNum):\n    i = 0\n\n    # TODO: Move to seperate method\n    upStrumTraj = fifth_poly(-strumD / 2, strumD / 2, speed)\n    downStrumTraj = fifth_poly(strumD / 2, -strumD / 2, speed)\n    strumTrajectories = [upStrumTraj, downStrumTraj]\n\n    while True:\n        print(\"Strum Command Received for Robot \" + str(robotNum))\n\n        strumDirection = i % 2\n\n        # time.sleep(delayArray[strumDirection, robotNum])\n        lightQ.put(robotNum)\n        strumbot(robotNum, strumTrajectories[strumDirection])\n\n        i += 1\n\n\ndef drumController(queue, num):\n    drumQ.put(1)\n    trajz = spline_poly(325, 35, .08, .08, 0.01)\n    trajp = spline_poly(-89, -28, .08, .08, 0.01)\n\n    trajz2 = spline_poly(325, 35, .08, .08, .1)\n    trajp2 = spline_poly(-89, -28, .08, .08, .1)\n\n    trajz3 = spline_poly(325, 35, .08, .08, .15)\n    trajp3 = spline_poly(-89, -28, .08, .08, .15)\n\n    i = 0\n    while True:\n        i += 1\n        play = queue.get()\n\n        if i % 3 == 1:\n            drumbot(trajz, trajp, num)\n\n        elif i % 3 == 2:\n            drumbot(trajz2, trajp2, num)\n\n        elif i % 3 == 0:\n            drumbot(trajz3, trajp3, num)\n\n\n# --------------- Controller Helpers --------------- #\ndef strumbot(numarm, traj):\n    pos = IP[numarm]\n    j_angles = pos\n    track_time = time.time()\n    initial_time = time.time()\n    for i in range(len(traj)):\n        j_angles[4] = traj[i]\n        arms[numarm].set_servo_angle_j(angles=j_angles, is_radian=False)\n\n        while track_time < initial_time + 0.004:\n            track_time = time.time()\n            time.sleep(0.0001)\n        initial_time += 0.004\n\n\ndef drumbot(trajz, trajp, arm):\n    track_time = time.time()\n    initial_time = time.time()\n    for i in range(len(trajz)):\n        mvpose = [492, 0, trajz[i], 180, trajp[i], 0]\n        drums[0].set_servo_cartesian(mvpose, speed=100, mvacc=2000)\n\n        while track_time < initial_time + 0.004:\n            track_time = time.time()\n            time.sleep(0.0001)\n        initial_time += 0.004\n\n\n# Picks and sends indexes, defined by anglesToSend, of a 6 item list, defined by listToSend\ndef listSend(listToSend, anglesToSend):\n    sentList = []\n    j = 0\n    for i in anglesToSend:\n        sentList.append(\n            (round(listToSend[i] * 2.5 * 256 / 360)) % 256 + (i * 20))\n        arduino.write(str(sentList[j]).encode())\n        delay()\n        j += 1\n\n\ndef sendSyncVal(value):\n    arduino.write(value.encode())\n    delay()\n\n\n# ------------------------ Weird Robot Stuff ------------------------ #\nglobal IP\nglobal arms\nglobal drums\nglobal strumD\nglobal speed\nglobal notes\nglobal lightMode\nglobal lightQ\nglobal arduino\n\n\n# --------------- Light Attributes --------------- #\nlightMode = 0\n# arduino = serial.Serial('/dev/ttyACM0', 9600)\n# arduino = serial.Serial('com4', 9600)    # for PC\n\nrandList1 = createRandList(4)\nrandList2 = createRandList(6)\nrandList3 = createRandList(6)\nrandList4 = createRandList(6)\nrandList5 = createRandList(4)\n\n# --------------- Arm Attributes --------------- #\nROBOT = \"xArms\"\nPORT = 5003\nspeed = 0.25\n\n# --------------- Initial Positinos --------------- #\nstrumD = 30\nIP0 = [-1, 87.1, -2, 126.5, -strumD / 2, 51.7, -45]\nIP1 = [2.1, 86.3, 0, 127.1, -strumD / 2, 50.1, -45]\nIP2 = [1.5, 81.6, 0.0, 120, -strumD / 2, 54.2, -45]\nIP3 = [2.5, 81, 0, 117.7, -strumD / 2, 50.5, -45]\nIP4 = [-1.6, 81.8, 0, 120, -strumD / 2, 50.65, -45]\nIP = [IP0, IP1, IP2, IP3, IP4]\n\n\n# --------------- Arm Addresses --------------- #\n# TODO: Consider adding drum arm to arms list\n# arm0 = XArmAPI('192.168.1.208')\n# arm1 = XArmAPI('192.168.1.226')\n# arm2 = XArmAPI('192.168.1.244')\n# arm3 = XArmAPI('192.168.1.203')\n# arm4 = XArmAPI('192.168.1.237')\n# arms = [arm0, arm1, arm2, arm3, arm4]\n\n# armDrum = XArmAPI('192.168.1.204')\n# drums = [armDrum]\n\n# ---- PC Debugging ---- #\narms = []\ndrums = []\n\n# --------------- Queues --------------- #\n# Arm Queues\nq0 = Queue()\nq1 = Queue()\nq2 = Queue()\nq3 = Queue()\nq4 = Queue()\nqList = [q0, q1, q2, q3, q4]\n\n# Drum Queue\ndrumQ = Queue()\n\n# Light Queue\nlightQ = Queue()\n\n\n# --------------- Threads --------------- #\nxArm0 = Thread(target=strumController, args=(q0, 0,))  # num 2\nxArm1 = Thread(target=strumController, args=(q1, 1,))  # num 4\nxArm2 = Thread(target=strumController, args=(q2, 2,))  # num 1\nxArm3 = Thread(target=strumController, args=(q3, 3,))  # num 3\nxArm4 = Thread(target=strumController, args=(q4, 4,))  # num 5\nxArmDrum = Thread(target=drumController, args=(drumQ, 5,))\nlights = Thread(target=lightController, args=(lightQ,))\n\n\ndef startThreads():\n    xArm0.start()\n    xArm1.start()\n    xArm2.start()\n    xArm3.start()\n    xArm4.start()\n    xArmDrum.start()\n    lights.start()\n\n\n# --------------- Getter Methods --------------- #\ndef getArms(): return arms\n\n\ndef getAngles(a): return arms[a].angles\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Handlers/RobotHandler.py b/Handlers/RobotHandler.py
+--- a/Handlers/RobotHandler.py	(revision 1f054846ff13a3e75dc307e1fef490dcc4df5966)
++++ b/Handlers/RobotHandler.py	(date 1677511285166)
+@@ -1,7 +1,7 @@
+ import time
+ import numpy as np
+ import serial
+-# from xarm import XArmAPI
++from xarm import XArmAPI
+ from queue import Queue
+ from threading import Thread
+ from Helpers.Helpers import createRandList, delay
+@@ -238,18 +238,18 @@
+ 
+ # --------------- Arm Addresses --------------- #
+ # TODO: Consider adding drum arm to arms list
+-# arm0 = XArmAPI('192.168.1.208')
+-# arm1 = XArmAPI('192.168.1.226')
+-# arm2 = XArmAPI('192.168.1.244')
+-# arm3 = XArmAPI('192.168.1.203')
+-# arm4 = XArmAPI('192.168.1.237')
+-# arms = [arm0, arm1, arm2, arm3, arm4]
++arm0 = XArmAPI('192.168.1.208')
++arm1 = XArmAPI('192.168.1.226')
++arm2 = XArmAPI('192.168.1.244')
++arm3 = XArmAPI('192.168.1.203')
++arm4 = XArmAPI('192.168.1.237')
++arms = [arm0, arm1, arm2, arm3, arm4]
+ 
+ # armDrum = XArmAPI('192.168.1.204')
+ # drums = [armDrum]
+ 
+ # ---- PC Debugging ---- #
+-arms = []
++# arms = []
+ drums = []
+ 
+ # --------------- Queues --------------- #
+Index: Demos/MicDemo.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import numpy as np\nimport pyaudio\nimport time\n\nfrom threading import Thread, Lock, Event\nfrom Classes.Phrase import Phrase\nfrom Classes.audioDevice import AudioDevice\nfrom Demos.IDemo import IDemo\nfrom Handlers.RobotHandler import playString, playStringTemp\nfrom Helpers.audioToMidi import AudioMidiConverter\n\n\nclass MicDemo(IDemo):\n    def __init__(self, sr=48000, frame_size=2400, activation_threshold=0.02, n_wait=16):\n        self.name = \"Mic Demo with Matchnig Notes and Rhythm\"\n\n        self.active = False\n        self.activation_threshold = activation_threshold\n        self.n_wait = n_wait\n        self.wait_count = 0\n        self.playing = False\n        self.phrase = []\n        self.midi_notes = []\n        self.midi_onsets = []\n\n        self.harrison_confusion_preventer = 1\n\n        self.process_thread = Thread()\n        self.event = Event()\n        self.lock = Lock()\n\n        try:\n            audioDevice = AudioDevice(self.listener)\n            print(\"Device connected!\")\n        except AssertionError:\n            print(\"Device not found. You probably did something wrong.\")\n\n        audioDevice.start()\n        print(\"Device stream started.\")\n\n        # TODO: Remove Raga Map\n        self.audio2midi = AudioMidiConverter(\n            raga_map=[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], sr=sr, frame_size=frame_size)\n\n    def start(self):\n        self.announceStart()\n        if self.process_thread.is_alive():\n            self.process_thread.join()\n        self.lock.acquire()\n        self.active = True\n        self.lock.release()\n        self.process_thread = Thread(target=self._process)\n        self.process_thread.start()\n        self.event.clear()\n\n    def announceStart(self):\n        print(f\"Now running {self.name}...\")\n        self.running = True\n\n    def reset_var(self):\n        self.wait_count = 0\n        self.playing = False\n        self.phrase = []\n        self.last_time = time.time()\n\n    def _process(self):\n        while True:\n            time.sleep(0.1)\n            self.lock.acquire()\n            if not self.active:\n                self.lock.release()\n                return\n\n            if not (self.playing or len(self.phrase) == 0):\n                self.lock.release()\n                break\n            self.lock.release()\n\n        # Note Guide\n        # 69 - A\n        # 72 - C\n        # 74 - D\n        # 76 - E\n        # 79 - G\n        print(\n            f\"\\nYour noises have been noted for the record ({self.harrison_confusion_preventer}).\")\n        self.harrison_confusion_preventer += 1\n\n        self.lock.acquire()\n        phrase = np.hstack(self.phrase)\n        self.phrase = []\n        self.lock.release()\n\n        if len(phrase) > 0:\n            notes, onsets = self.audio2midi.convert(phrase, return_onsets=True)\n            print(\"notes:\", notes)\n            # print(\"onsets:\", onsets)\n            phrase = Phrase(notes, onsets)\n\n            ''' This is where you can randomize - Harrison '''\n            # phrase = self.process_midi_phrase(\n            #     phrase, self.randomness_temperature)\n\n            self.perform(phrase)\n\n        self._process()\n\n    def perform(self, phrase):\n        # TODO: optimize this shit lmaooooo\n        prev_start = 0\n        m = 2\n        now = time.time()\n        for i in range(len(phrase)):\n            note = phrase.notes[i]\n            corrected_note = self.correct_note(note.pitch)\n            dly = max(0, ((note.start - prev_start) * m) - (time.time() - now))\n            print(f\"Delaying by {dly} seconds\")\n            self.event.wait(dly)\n            now = time.time()\n            self.lock.acquire()\n            playStringTemp(corrected_note)\n            self.lock.release()\n            prev_start = note.start\n\n    # Note Info:\n    # 9 - A\n    # 0 - C\n    # 2 - D\n    # 4 - E\n    # 7 - G\n\n    def correct_note(self, note):\n        scale = [9, 0, 2, 4, 7]\n        return scale.index(min(scale, key=lambda x: abs(x - (note % 12))))\n\n    def listener(self, in_data: bytes, frame_count: int, time_info: dict[str, float], status: int) -> tuple[\n            bytes, int]:\n        if not self.active:\n            self.reset_var()\n            return in_data, pyaudio.paContinue\n\n        y = np.frombuffer(in_data, dtype=np.int16)\n        y = y[::2]\n\n        y = self.int16_to_float(y)\n        activation = np.abs(y).mean()\n        if activation > self.activation_threshold:\n\n            ''' Makes for a cool visual - Harrison '''\n            print(activation)\n\n            self.playing = True\n            self.wait_count = 0\n            self.lock.acquire()\n            self.phrase.append(y)\n            self.lock.release()\n        else:\n            if self.wait_count > self.n_wait:\n                self.playing = False\n                self.wait_count = 0\n            else:\n                self.lock.acquire()\n                if self.playing:\n                    self.phrase.append(y)\n                self.lock.release()\n                self.wait_count += 1\n\n        return in_data, pyaudio.paContinue\n\n    @staticmethod\n    def int16_to_float(x):\n        return x / (1 << 15)\n\n    @staticmethod\n    def process_midi_phrase(phrase, temperature: float):\n        temp = max(min(temperature, 1), 0)\n        n_notes_to_change = np.random.randint(0, int((len(phrase)) * temp), 1)\n        # to avoid ValueError: Fewer non-zero entries in p than size\n        w = np.maximum(0, temperature - 1) + np.hanning(len(phrase)) + 1e-6\n        p = w / np.sum(w)\n        indices = np.random.choice(\n            np.arange(len(phrase)), n_notes_to_change, replace=False, p=p)\n        options = np.unique(phrase.get_raw_notes())\n        for i in indices:\n            phrase.notes[i].pitch = np.random.choice(options, 1)[0]\n        return phrase\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Demos/MicDemo.py b/Demos/MicDemo.py
+--- a/Demos/MicDemo.py	(revision 1f054846ff13a3e75dc307e1fef490dcc4df5966)
++++ b/Demos/MicDemo.py	(date 1677510603827)
+@@ -33,6 +33,7 @@
+             audioDevice = AudioDevice(self.listener)
+             print("Device connected!")
+         except AssertionError:
++            audioDevice = None
+             print("Device not found. You probably did something wrong.")
+ 
+         audioDevice.start()
+@@ -133,8 +134,7 @@
+         scale = [9, 0, 2, 4, 7]
+         return scale.index(min(scale, key=lambda x: abs(x - (note % 12))))
+ 
+-    def listener(self, in_data: bytes, frame_count: int, time_info: dict[str, float], status: int) -> tuple[
+-            bytes, int]:
++    def listener(self, in_data, frame_count, time_info, status):
+         if not self.active:
+             self.reset_var()
+             return in_data, pyaudio.paContinue
+Index: Classes/audioDevice.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\"\"\"\nAdapted By: Harrison Melton\nOriginal Author: Raghavasimhan Sankaranarayanan\nDate: 25/02/2023\n\"\"\"\nimport pyaudio\n\n\nclass AudioDevice:\n    def __init__(self, listener, rate=48000, frame_size=2400, input_dev_name='Line (3- AudioBox USB 96)', channels=1):\n        self.input_device_id = -1\n        self.listener = listener\n        self.p = pyaudio.PyAudio()\n        self._get_dev_id(input_dev_name)\n\n        if self.input_device_id < 0:\n            raise AssertionError(\"Input device not found\")\n\n        self.stream = self.p.open(rate=rate, channels=channels, format=self.p.get_format_from_width(2), input=True,\n                                  output=False,\n                                  frames_per_buffer=frame_size,\n                                  stream_callback=self._listener, input_device_index=self.input_device_id)\n\n    def _get_dev_id(self, input_device_name):\n        for i in range(self.p.get_device_count()):\n            info = self.p.get_device_info_by_index(i)\n            if info['name'] == input_device_name:\n                self.input_device_id = i\n\n    def _listener(self, in_data: bytes, frame_count: int, time_info: dict[str, float], status: int) -> tuple[bytes, int]:\n        return self.listener(in_data=in_data, frame_count=frame_count, time_info=time_info, status=status)\n\n    def start(self):\n        self.stream.start_stream()\n\n    def stop(self):\n        self.stream.stop_stream()\n\n    def reset(self):\n        self.stop()\n        if self.stream:\n            self.stream.close()\n        self.p.terminate()\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Classes/audioDevice.py b/Classes/audioDevice.py
+--- a/Classes/audioDevice.py	(revision 1f054846ff13a3e75dc307e1fef490dcc4df5966)
++++ b/Classes/audioDevice.py	(date 1677510780140)
+@@ -7,7 +7,7 @@
+ 
+ 
+ class AudioDevice:
+-    def __init__(self, listener, rate=48000, frame_size=2400, input_dev_name='Line (3- AudioBox USB 96)', channels=1):
++    def __init__(self, listener, rate=48000, frame_size=2400, input_dev_name='Digital Input (S/PDIF) - AudioBox USB 96', channels=1):
+         self.input_device_id = -1
+         self.listener = listener
+         self.p = pyaudio.PyAudio()
+@@ -24,10 +24,11 @@
+     def _get_dev_id(self, input_device_name):
+         for i in range(self.p.get_device_count()):
+             info = self.p.get_device_info_by_index(i)
++            print(info)
+             if info['name'] == input_device_name:
+                 self.input_device_id = i
+ 
+-    def _listener(self, in_data: bytes, frame_count: int, time_info: dict[str, float], status: int) -> tuple[bytes, int]:
++    def _listener(self, in_data, frame_count, time_info, status):
+         return self.listener(in_data=in_data, frame_count=frame_count, time_info=time_info, status=status)
+ 
+     def start(self):

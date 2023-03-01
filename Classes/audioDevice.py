@@ -27,7 +27,7 @@ class AudioDevice:
             if info['name'] == input_device_name:
                 self.input_device_id = i
 
-    def _listener(self, in_data: bytes, frame_count: int, time_info: dict[str, float], status: int) -> tuple[bytes, int]:
+    def _listener(self, in_data, frame_count, time_info, status):
         return self.listener(in_data=in_data, frame_count=frame_count, time_info=time_info, status=status)
 
     def start(self):

@@ -133,8 +133,7 @@ class MicDemo(IDemo):
         scale = [9, 0, 2, 4, 7]
         return scale.index(min(scale, key=lambda x: abs(x - (note % 12))))
 
-    def listener(self, in_data: bytes, frame_count: int, time_info: dict[str, float], status: int) -> tuple[
-            bytes, int]:
+    def listener(self, in_data, frame_count, time_info, status):
         if not self.active:
             self.reset_var()
             return in_data, pyaudio.paContinue
