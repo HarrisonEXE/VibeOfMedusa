@@ -88,7 +88,7 @@ class MicDemo(IDemo):
         # 76 - E
         # 79 - G
         print(
-            f"\nYour noises have been noted for the record ({self.harrison_confusion_preventer}).")
+            f"\nYour noises have been noted for the record ({len(self.phrase)}).")
         self.harrison_confusion_preventer += 1
 
         self.lock.acquire()
@@ -135,7 +135,7 @@ class MicDemo(IDemo):
     # 7 - G
 
     def correct_note(self, note):
-        scale = [9, 0, 2, 4, 7]
+        scale = [4, 0, 9, 7, 2]
         return scale.index(min(scale, key=lambda x: abs(x - (note % 12))))
 
     def listener(self, in_data, frame_count, time_info, status):

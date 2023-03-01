@@ -122,7 +122,7 @@ def strumController(queue, robotNum):
         strumDirection = i % 2
 
         # time.sleep(delayArray[strumDirection, robotNum])
-        # lightQ.put(robotNum)
+        lightQ.put(robotNum)
         strumbot(robotNum, strumTrajectories[strumDirection])
 
         i += 1
@@ -162,7 +162,6 @@ def strumbot(numarm, traj):
     initial_time = time.time()
     for i in range(len(traj)):
         j_angles[4] = traj[i]
-        print("ok")
         arms[numarm].set_servo_angle_j(angles=j_angles, is_radian=False)
 
         while track_time < initial_time + 0.004:
@@ -214,8 +213,8 @@ global arduino
 
 
 # --------------- Light Attributes --------------- #
-lightMode = 0
-# arduino = serial.Serial('/dev/ttyACM0', 9600)
+lightMode = 1
+arduino = serial.Serial('/dev/ttyACM0', 9600)
 # arduino = serial.Serial('com4', 9600)    # for PC
 
 randList1 = createRandList(4)
@@ -234,7 +233,7 @@ strumD = 30
 IP0 = [-0.25, 87.38, -2, 126.5, -strumD / 2, 51.73, -45]
 IP1 = [2.62, 86.2, 0, 127.1, -strumD / 2, 50.13, -45]
 IP2 = [1.3, 81.68, 0.0, 120, -strumD / 2, 54.2, -45]
-IP3 = [-1.4, 83.8, 0, 120, -strumD / 2, 50.65, -45]
+IP3 = [-1.4, 83.95, 0, 120, -strumD / 2, 50.65, -45]
 IP4 = [-1.8, 81.8, 0, 120, -strumD / 2, 50.65, -45]
 IP = [IP0, IP1, IP2, IP3, IP4]
 
@@ -288,7 +287,7 @@ def startThreads():
     xArm3.start()
     xArm4.start()
     # xArmDrum.start()
-    # lights.start()
+    lights.start()
     print("Threads started.")
 
 
