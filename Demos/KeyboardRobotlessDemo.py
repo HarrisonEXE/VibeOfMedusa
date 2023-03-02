@@ -1,7 +1,7 @@
 from Demos.IDemo import IDemo
 from Handlers.InputHandler import getManualInput
 from Handlers.RobotHandler import playTestString
-from Helpers.NoteRandomizer import randomizer
+
 
 
 class KeyboardRobotlessDemo(IDemo):

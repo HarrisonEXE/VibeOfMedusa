@@ -4,7 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e0a370ab-d1a5-42be-a3c3-90cbf848dc93" name="Changes" comment="" />
+    <list default="true" id="e0a370ab-d1a5-42be-a3c3-90cbf848dc93" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/VibeOfMedusa.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Demos/RandomizedMicDemo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Demos/KeyboardRobotlessDemo.py" beforeDir="false" afterPath="$PROJECT_DIR$/Demos/KeyboardRobotlessDemo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Helpers/NoteRandomizer.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/NoteRandomizer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Main.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -25,9 +36,16 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "/home/codmusic/Desktop/xArm/HopesDance"
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "last_opened_file_path": "/home/codmusic/Downloads/LandonHarrison/MicrophoneMedusa/VibeOfMedusa/Helpers"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Helpers" />
+      <recent name="$PROJECT_DIR$/Demos" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="Main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="VibeOfMedusa" />
