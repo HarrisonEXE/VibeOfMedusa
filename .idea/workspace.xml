@@ -5,14 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e0a370ab-d1a5-42be-a3c3-90cbf848dc93" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/VibeOfMedusa.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Demos/RandomizedMicDemo.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Demos/VoiceRecognizer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Demos/KeyboardRobotlessDemo.py" beforeDir="false" afterPath="$PROJECT_DIR$/Demos/KeyboardRobotlessDemo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Handlers/RobotHandler.py" beforeDir="false" afterPath="$PROJECT_DIR$/Handlers/RobotHandler.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Helpers/NoteRandomizer.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/NoteRandomizer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Main.py" afterDir="false" />
     </list>
@@ -20,6 +15,13 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />

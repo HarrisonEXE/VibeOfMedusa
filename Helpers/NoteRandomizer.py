@@ -28,7 +28,7 @@ def beat_randomizer(phrase):
     length = len(notes)
     random_arr = [1, 1, 1, 2, 2, 2, 2, 2, 2]
     rand_len = len(random_arr) - 1
-    for i in range(0, 16, 2):
+    for i in range(0, 32, 2):
         ### random delay is a random amount of beats
         random_num = random_arr[random.randint(0, rand_len)]
         random_delay = note_length * random_num

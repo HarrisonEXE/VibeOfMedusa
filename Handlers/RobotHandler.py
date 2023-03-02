@@ -6,6 +6,16 @@ from queue import Queue
 from threading import Thread
 from Helpers.Helpers import createRandList, delay
 from Helpers.TrajectoryGeneration import fifth_poly, spline_poly
+# ------------------------ Weird Robot Stuff ------------------------ #
+global IP
+global arms
+global drums
+global strumD
+global speed
+global notes
+global lightMode
+global lightQ
+global arduino
 
 
 # ------------------------ Robot Logistics ------------------------ #
@@ -38,6 +48,7 @@ def turnOffLive():
         arms[i].set_state(0)
         moveToStart(i)
     waitForRobots()
+
 
 
 def turnOnLive():
@@ -90,10 +101,24 @@ def loadQueues(indexes, delays):
         qList[i].put(delays[i])
 
 
+def scare():
+    arms[0].set_servo_angle(angle=[-.1, -15, 71.6, 83.8, -7.3, 0.8, 4.6], wait=False, speed=40, acceleration=0.6,
+                            is_radian=False)
+    arms[1].set_servo_angle(angle=[0.0, -43.9, 26.5, 90.1, 18.1, 1.2, 28], wait=False, speed=25, acceleration=0.4,
+                            is_radian=False)
+    arms[2].set_servo_angle(angle=[25.7, 34.9, 25.8, 93.9, -25.2, 5.1, 2], wait=False, speed=25, acceleration=0.4,
+                            is_radian=False)
+    arms[3].set_servo_angle(angle=[41.4, 0.0, 0.0, 128.3, 0.0, 54.4, 3.1], wait=False, speed=25, acceleration=0.4,
+                            is_radian=False)
+    # arms[4].set_servo_angle(angle=IP[4], wait=False, speed=20, acceleration=0.25,
+    #                         is_radian=False)
+
+
 # ------------------------ Controllers ------------------------ #
 def lightController(lightQ):
     while True:
-        if lightMode == 0:  # gradient mode
+        # print(lightMode)
+        if not lightMode:  # gradient mode
             sendSyncVal('gradient')
             listSend(getAngles(2), randList1)  # [2, 3, 4, 5])
             listSend(getAngles(0), randList2)  # [1, 2, 3, 4, 5, 6])
@@ -101,11 +126,15 @@ def lightController(lightQ):
             listSend(getAngles(1), randList4)  # [1, 2, 3, 4, 5, 6])
             listSend(getAngles(4), randList5)  # [2, 3, 4, 5])
 
-        if lightMode == 1:  # flash mode
+        if lightMode:  # flash mode
             received = lightQ.get()
             sendSyncVal('flash')
             sendSyncVal(str(received + 1))
 
+def switchLightMode():
+    global lightMode
+    lightMode = not lightMode
+    # print("made it to light mode")
 
 def strumController(queue, robotNum):
     i = 0
@@ -200,20 +229,20 @@ def sendSyncVal(value):
     delay()
 
 
-# ------------------------ Weird Robot Stuff ------------------------ #
-global IP
-global arms
-global drums
-global strumD
-global speed
-global notes
-global lightMode
-global lightQ
-global arduino
+# # ------------------------ Weird Robot Stuff ------------------------ #
+# global IP
+# global arms
+# global drums
+# global strumD
+# global speed
+# global notes
+# global lightMode
+# global lightQ
+# global arduino
 
 
 # --------------- Light Attributes --------------- #
-lightMode = 1
+lightMode = False
 arduino = serial.Serial('/dev/ttyACM0', 9600)
 # arduino = serial.Serial('com4', 9600)    # for PC
 
