@@ -13,9 +13,9 @@ from Helpers.audioToMidi import AudioMidiConverter
 
 
 class RandomizedMicDemo(IDemo):
-    def __init__(self, sr=48000, frame_size=2400, activation_threshold=0.02, n_wait=16):
+    def __init__(self, sr=48000, frame_size=2400, activation_threshold=0.02, n_wait=16, is_lab_work=True):
         self.name = "Mic Demo with Randomized Beat"
-
+        self.is_lab_work = is_lab_work
         self.active = False
         self.activation_threshold = activation_threshold
         self.n_wait = n_wait
@@ -44,11 +44,13 @@ class RandomizedMicDemo(IDemo):
         self.audio2midi = AudioMidiConverter(
             raga_map=[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], sr=sr, frame_size=frame_size)
 
-    def start(self):
-        setupRobots()
+    def readyRobots(self):
+        setupRobots(self.is_lab_work)
         startThreads()
         turnOnLive()
 
+    def start(self):
+        self.readyRobots()
         self.announceStart()
 
         if self.process_thread.is_alive():

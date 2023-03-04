@@ -12,12 +12,12 @@ class MedusaDemo:
         self.keyboard_demo = KeyboardDemo()
         self.keyboard_robotless_demo = KeyboardRobotlessDemo()
         self.keyboard_random_note_demo = KeyboardRandomNoteDemo()
-        # self.mic_demo = MicDemo()
+        self.mic_demo = MicDemo(is_lab_work=False)
         # self.randomized_mic_demo = RandomizedMicDemo()
-        self.voice_demo = VoiceDemo()
+        # self.voice_demo = VoiceDemo()
 
         # self.current_demo = self.keyboard_demo
-        self.current_demo = self.voice_demo
+        self.current_demo = self.mic_demo
 
     def run(self):
         self.current_demo.start()

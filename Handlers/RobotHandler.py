@@ -1,25 +1,34 @@
 import time
 import numpy as np
 import serial
-from xarm import XArmAPI
+# from xarm import XArmAPI
 from queue import Queue
 from threading import Thread
 from Helpers.Helpers import createRandList, delay
 from Helpers.TrajectoryGeneration import fifth_poly, spline_poly
-# ------------------------ Weird Robot Stuff ------------------------ #
-global IP
-global arms
-global drums
-global strumD
-global speed
-global notes
-global lightMode
-global lightQ
-global arduino
 
 
 # ------------------------ Robot Logistics ------------------------ #
-def setupRobots():
+def setupRobots(is_lab_work):
+    buildArmsList(is_lab_work)
+    connectToArms()
+    print("Ready to start.")
+
+
+def buildArmsList(is_lab_work):
+    global arms
+    if is_lab_work:
+        arm0 = XArmAPI('192.168.1.208')
+        arm1 = XArmAPI('192.168.1.226')
+        arm2 = XArmAPI('192.168.1.244')
+        arm3 = XArmAPI('192.168.1.203')
+        arm4 = XArmAPI('192.168.1.237')
+        arms = [arm0, arm1, arm2, arm3, arm4]
+    else:
+        arms = []
+
+
+def connectToArms():
     for i in range(len(arms)):
         arms[i].set_simulation_robot(on_off=False)
         arms[i].motion_enable(enable=True)
@@ -29,7 +38,7 @@ def setupRobots():
         arms[i].set_state(0)
         arms[i].set_servo_angle(angle=IP[i], wait=False, speed=20, acceleration=0.25,
                                 is_radian=False)
-    print("Ready to start.")
+    print(f"{len(arms)} arms connected.")
 
 
 def moveToStart(index):
@@ -84,6 +93,8 @@ def playStringTemp(noteInfo):
     print(f"Loading note {noteInfo}")
     loadQueue(noteInfo, 'X')
 
+def playTestStringTemp(robotNum):
+    print(f"Loading note on robot {robotNum}")
 
 def playTestString(noteInfo):
     degree, delay = noteInfo
@@ -230,21 +241,21 @@ def sendSyncVal(value):
     delay()
 
 
-# # ------------------------ Weird Robot Stuff ------------------------ #
-# global IP
-# global arms
-# global drums
-# global strumD
-# global speed
-# global notes
-# global lightMode
-# global lightQ
-# global arduino
+# ------------------------ Weird Robot Stuff ------------------------ #
+global IP
+global arms
+global drums
+global strumD
+global speed
+global notes
+global lightMode
+global lightQ
+global arduino
 
 
 # --------------- Light Attributes --------------- #
 lightMode = False
-arduino = serial.Serial('/dev/ttyACM0', 9600)
+# arduino = serial.Serial('/dev/ttyACM0', 9600)
 # arduino = serial.Serial('com4', 9600)    # for PC
 
 randList1 = createRandList(4)
@@ -270,12 +281,12 @@ IP = [IP0, IP1, IP2, IP3, IP4]
 
 # --------------- Arm Addresses --------------- #
 # TODO: Consider adding drum arm to arms list
-arm0 = XArmAPI('192.168.1.208')
-arm1 = XArmAPI('192.168.1.226')
-arm2 = XArmAPI('192.168.1.244')
-arm3 = XArmAPI('192.168.1.203')
-arm4 = XArmAPI('192.168.1.237')
-arms = [arm0, arm1, arm2, arm3, arm4]
+# arm0 = XArmAPI('192.168.1.208')
+# arm1 = XArmAPI('192.168.1.226')
+# arm2 = XArmAPI('192.168.1.244')
+# arm3 = XArmAPI('192.168.1.203')
+# arm4 = XArmAPI('192.168.1.237')
+# arms = [arm0, arm1, arm2, arm3, arm4]
 
 # armDrum = XArmAPI('192.168.1.204')
 # drums = [armDrum]
@@ -317,7 +328,7 @@ def startThreads():
     xArm3.start()
     xArm4.start()
     # xArmDrum.start()
-    lights.start()
+    # lights.start()
     print("Threads started.")
 
 

@@ -3,13 +3,17 @@ import speech_recognition as sr
 from Handlers.RobotHandler import setupRobots, turnOffLive, startThreads, scare, turnOnLive, switchLightMode, lightQ
 
 
-class VoiceDemo():
-    def __init__(self):
-        pass
+class VoiceDemo:
+    def __init__(self, is_lab_work=True):
+        self.is_lab_work = is_lab_work
+
+    def readyRobots(self):
+        setupRobots(self.is_lab_work)
+        startThreads()
+        # turnOnLive()
 
     def start(self):
-        setupRobots()
-        startThreads()
+        self.readyRobots()
         r = sr.Recognizer()
         self.listen(r)
 
@@ -42,7 +46,6 @@ class VoiceDemo():
                     # speech was unintelligible
                     response["error"] = "Unable to recognize speech"
                     continue
-
 
                 text = response["transcription"]
                 text = text.lower()
