@@ -12,7 +12,7 @@ from Helpers.TrajectoryGeneration import fifth_poly, spline_poly
 def setupRobots(is_lab_work):
     buildArmsList(is_lab_work)
     connectToArms()
-    print("Ready to start.")
+    print("Robots are connected and ready")
 
 
 def buildArmsList(is_lab_work):
@@ -93,8 +93,10 @@ def playStringTemp(noteInfo):
     print(f"Loading note {noteInfo}")
     loadQueue(noteInfo, 'X')
 
+
 def playTestStringTemp(robotNum):
     print(f"Loading note on robot {robotNum}")
+
 
 def playTestString(noteInfo):
     degree, delay = noteInfo
@@ -329,7 +331,7 @@ def startThreads():
     xArm4.start()
     # xArmDrum.start()
     # lights.start()
-    print("Threads started.")
+    print("Robot threads started")
 
 
 # --------------- Getter Methods --------------- #
