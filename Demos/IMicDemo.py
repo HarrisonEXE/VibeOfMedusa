@@ -6,13 +6,15 @@ from threading import Thread, Lock, Event
 from Classes.Phrase import Phrase
 from Classes.audioDevice import AudioDevice
 from Demos.IDemo import IDemo
+from Demos.IRobotDemo import IRobotDemo
 from Handlers.PerformanceHandler import PerformanceHandler
-from Handlers.RobotHandler import playString, playStringTemp, setupRobots, startThreads, turnOnLive
+from Handlers.RobotHandler import RobotHandler
 from Helpers.audioToMidi import AudioMidiConverter
 
 
-class IMicDemo(IDemo):
-    def __init__(self, sr=48000, frame_size=2400, activation_threshold=0.02, n_wait=16, is_lab_work=True):
+class IMicDemo(IRobotDemo):
+    def __init__(self, robotHandler, is_lab_work=True, sr=48000, frame_size=2400, activation_threshold=0.02, n_wait=16):
+        super().__init__(robotHandler, is_lab_work)
         self.name = "Mic Demo Interface"
 
         self.is_lab_work = is_lab_work
@@ -25,8 +27,9 @@ class IMicDemo(IDemo):
         self.midi_notes = []
         self.midi_onsets = []
 
-        self.performance_handler = PerformanceHandler(
-            is_lab_work=self.is_lab_work)
+        # Create RobotDemo Interface and move this
+        self.performance_handler = PerformanceHandler(robotHandler=self.robotHandler,
+                                                      is_lab_work=self.is_lab_work)
 
         self.process_thread = Thread()
         self.event = Event()
@@ -46,11 +49,6 @@ class IMicDemo(IDemo):
         except AssertionError:
             print("Device not found. You probably did something wrong.")
 
-    def readyRobots(self):
-        setupRobots(self.is_lab_work)
-        startThreads()
-        turnOnLive()
-
     def start(self):
         self.connectAudioDevice()
         self.readyRobots()
@@ -63,10 +61,6 @@ class IMicDemo(IDemo):
         self.process_thread = Thread(target=self._process)
         self.process_thread.start()
         self.event.clear()
-
-    def announceStart(self):
-        print(f"Now running {self.name}...")
-        self.running = True
 
     def reset_var(self):
         self.wait_count = 0

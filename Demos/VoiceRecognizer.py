@@ -1,19 +1,14 @@
 import speech_recognition as sr
+from Demos.IRobotDemo import IRobotDemo
 
-from Handlers.RobotHandler import setupRobots, turnOffLive, startThreads, scare, turnOnLive, switchLightMode, lightQ
 
-
-class VoiceDemo:
-    def __init__(self, is_lab_work=True):
-        self.is_lab_work = is_lab_work
-
-    def readyRobots(self):
-        setupRobots(self.is_lab_work)
-        startThreads()
-        # turnOnLive()
+class VoiceDemo(IRobotDemo):
+    def __init__(self, robotHandler, is_lab_work=True):
+        super().__init__(robotHandler, is_lab_work)
+        self.name = "Voice Recognition Demo"
 
     def start(self):
-        self.readyRobots()
+        self.readyRobotsWithoutLive()
         r = sr.Recognizer()
         self.listen(r)
 
@@ -53,15 +48,15 @@ class VoiceDemo:
                 print(f"Detected phrase: {text}")
                 if "hey medusa" in text:
                     print("You have angered Medusa")
-                    turnOffLive()
-                    scare()
+                    self.robotHandler.turnOffLive()
+                    self.robotHandler.scare()
                 elif "calm down" in text:
                     print("Aight, Medusa is chill now")
-                    turnOnLive()
+                    self.robotHandler.turnOnLive()
                 elif "toggle lights" in text:
                     print("lights are toggled")
                     # switchLightMode()
-                    switchLightMode()
-                    lightQ.put(3)
+                    self.robotHandler.switchLightMode()
+                    self.robotHandler.lightQ.put(3)
                 else:
                     print("sucks")

@@ -1,13 +1,12 @@
 import time
 import threading
 
-from Handlers.RobotHandler import playStringTemp, playTestStringTemp
-
 
 class PerformanceHandler:
-    def __init__(self, is_lab_work=True):
+    def __init__(self, robotHandler, is_lab_work=True):
         self.lock = threading.Lock()
         self.event = threading.Event()
+        self.robotHandler = robotHandler
         self.is_lab_work = is_lab_work
 
     def perform(self, phrase):
@@ -27,12 +26,14 @@ class PerformanceHandler:
 
             self.lock.acquire()  # TODO: Check to see if actually neccesary
             if self.is_lab_work:
-                playStringTemp(corrected_pitch)
+                self.robotHandler.playStringTemp(corrected_pitch)
             else:
-                playTestStringTemp(corrected_pitch)
+                self.robotHandler.playTestStringTemp(corrected_pitch)
             self.lock.release()
 
             prev_note_start = note.start
+
+        print("")
 
     def correct_pitch(self, note):
         # Note Info:

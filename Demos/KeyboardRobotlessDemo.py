@@ -1,7 +1,7 @@
+import time
 from Demos.IDemo import IDemo
 from Handlers.InputHandler import getManualInput
-from Handlers.RobotHandler import playTestString
-
+# from Handlers.RobotHandler import playTestString
 
 
 class KeyboardRobotlessDemo(IDemo):
@@ -15,8 +15,6 @@ class KeyboardRobotlessDemo(IDemo):
         print(f"Recieved the following phrase: \n{phrase}")
 
         for i in range(len(phrase)):
-            playTestString(phrase[i])
-
-    def announceStart(self):
-        print(f"Now running {self.name}...")
-        self.running = True
+            degree, delay = phrase[i]
+            time.sleep(delay)
+            print(f"Playing note {degree} with a {delay} delay")

@@ -4,19 +4,20 @@ from Demos.KeyboardRobotlessDemo import KeyboardRobotlessDemo
 from Demos.MicDemo import MicDemo
 from Demos.RandomizedMicDemo import RandomizedMicDemo
 from Demos.VoiceRecognizer import VoiceDemo
-from Handlers.RobotHandler import startThreads, setupRobots
+from Handlers.RobotHandler import RobotHandler
 
 
 class MedusaDemo:
-    def __init__(self):
-        self.keyboard_demo = KeyboardDemo()
+    def __init__(self, robotHandler):
+        # TODO: check if every demo creating their own instance of robotHandler causes problems
         self.keyboard_robotless_demo = KeyboardRobotlessDemo()
-        self.keyboard_random_note_demo = KeyboardRandomNoteDemo()
-        self.mic_demo = MicDemo(is_lab_work=False)
-        # self.randomized_mic_demo = RandomizedMicDemo()
-        # self.voice_demo = VoiceDemo()
 
-        # self.current_demo = self.keyboard_demo
+        self.keyboard_demo = KeyboardDemo(robotHandler)
+        self.keyboard_random_note_demo = KeyboardRandomNoteDemo(robotHandler)
+        self.mic_demo = MicDemo(robotHandler, is_lab_work=False)
+        self.randomized_mic_demo = RandomizedMicDemo(robotHandler)
+        self.voice_demo = VoiceDemo(robotHandler)
+
         self.current_demo = self.mic_demo
 
     def run(self):
@@ -24,5 +25,7 @@ class MedusaDemo:
 
 
 if __name__ == '__main__':
-    demo = MedusaDemo()
+    robotHandler = RobotHandler()
+    is_lab_work = False
+    demo = MedusaDemo(robotHandler)
     demo.run()

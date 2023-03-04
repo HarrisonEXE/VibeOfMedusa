@@ -1,17 +1,20 @@
 from Demos.IDemo import IDemo
+from Demos.IRobotDemo import IRobotDemo
 from Handlers.InputHandler import getManualInput
-from Handlers.RobotHandler import playString, setupRobots
 from numpy.random import randint
 
+from Handlers.RobotHandler import RobotHandler
 
-class KeyboardRandomNoteDemo(IDemo):
-    def __init__(self) -> None:
+
+class KeyboardRandomNoteDemo(IRobotDemo):
+    def __init__(self, robotHandler, is_lab_work=True):
+        super().__init__(robotHandler, is_lab_work)
         self.name = "Keyboard Demo with Randomized Notes and Matching Rhythm"
 
     def start(self):
         self.announceStart()
 
-        setupRobots()
+        self.readyRobots()
 
         phrase = getManualInput()
         print(f"Recieved the following phrase: \n{phrase}")
@@ -20,11 +23,7 @@ class KeyboardRandomNoteDemo(IDemo):
         print(f"Changed to the following phrase: \n{phrase}")
 
         for i in range(len(phrase)):
-            playString(phrase[i])
+            self.robotHandler.playString(phrase[i])
 
     def getRandomizedNotes(self):
         return randint(1, 5, 5)
-
-    def announceStart(self):
-        print(f"Now running {self.name}...")
-        self.running = True
