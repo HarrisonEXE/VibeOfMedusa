@@ -6,6 +6,7 @@ from threading import Thread, Lock, Event
 from Classes.Phrase import Phrase
 from Classes.audioDevice import AudioDevice
 from Demos.IDemo import IDemo
+from Handlers.PerformanceHandler import PerformanceHandler
 from Handlers.RobotHandler import playString, playStringTemp, setupRobots, startThreads, turnOnLive
 from Helpers.NoteRandomizer import beat_randomizer, basic_randomizer
 from Helpers.audioToMidi import AudioMidiConverter
@@ -25,7 +26,6 @@ class RandomizedMicDemo(IDemo):
         self.midi_onsets = []
 
         self.performance_handler = PerformanceHandler()
-        self.harrison_confusion_preventer = 1
 
         self.process_thread = Thread()
         self.event = Event()
@@ -83,15 +83,8 @@ class RandomizedMicDemo(IDemo):
                 break
             self.lock.release()
 
-        # Note Guide
-        # 69 - A
-        # 72 - C
-        # 74 - D
-        # 76 - E
-        # 79 - G
         print(
-            f"\nYour noises have been noted for the record ({len(self.phrase)}).")
-        self.harrison_confusion_preventer += 1
+            f"\nYour noises have been noted for the record.")
 
         self.lock.acquire()
         phrase = np.hstack(self.phrase)
