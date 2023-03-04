@@ -2,7 +2,7 @@ import time
 from Classes.OldPhrase import Phrase
 
 
-timeout = 2  # seconds
+timeout = 5  # seconds
 
 
 def getManualInput():

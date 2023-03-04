@@ -1,7 +1,7 @@
 import time
 import numpy as np
 import serial
-# from xarm import XArmAPI
+from xarm import XArmAPI
 from queue import Queue
 from threading import Thread
 from Helpers.Helpers import createRandList, delay

@@ -14,7 +14,7 @@ class KeyboardDemo(IRobotDemo):
         self.readyRobots()
 
         phrase = getManualInput()
-        print(f"Recieved the following phrase: \n{phrase}")
+        print(f"Received the following phrase: \n{phrase}")
 
         for i in range(len(phrase)):
             self.robotHandler.playString(phrase[i])
