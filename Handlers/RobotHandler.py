@@ -50,7 +50,6 @@ def turnOffLive():
     waitForRobots()
 
 
-
 def turnOnLive():
     for i in range(len(arms)):
         moveToStrumPos(i)
@@ -131,10 +130,12 @@ def lightController(lightQ):
             sendSyncVal('flash')
             sendSyncVal(str(received + 1))
 
+
 def switchLightMode():
     global lightMode
     lightMode = not lightMode
     # print("made it to light mode")
+
 
 def strumController(queue, robotNum):
     i = 0

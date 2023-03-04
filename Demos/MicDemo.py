@@ -6,7 +6,8 @@ from threading import Thread, Lock, Event
 from Classes.Phrase import Phrase
 from Classes.audioDevice import AudioDevice
 from Demos.IDemo import IDemo
-from Handlers.RobotHandler import playString, playStringTemp, setupRobots, startThreads, turnOnLive
+from Handlers.PerformanceHandler import PerformanceHandler
+from Handlers.RobotHandler import playString, playStringTemp
 from Helpers.audioToMidi import AudioMidiConverter
 
 
@@ -23,7 +24,7 @@ class MicDemo(IDemo):
         self.midi_notes = []
         self.midi_onsets = []
 
-        self.harrison_confusion_preventer = 1
+        self.performance_handler = PerformanceHandler()
 
         self.process_thread = Thread()
         self.event = Event()
@@ -43,12 +44,7 @@ class MicDemo(IDemo):
             raga_map=[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], sr=sr, frame_size=frame_size)
 
     def start(self):
-        setupRobots()
-        startThreads()
-        turnOnLive()
-
         self.announceStart()
-
         if self.process_thread.is_alive():
             self.process_thread.join()
         self.lock.acquire()
@@ -87,9 +83,7 @@ class MicDemo(IDemo):
         # 74 - D
         # 76 - E
         # 79 - G
-        print(
-            f"\nYour noises have been noted for the record ({len(self.phrase)}).")
-        self.harrison_confusion_preventer += 1
+        print(f"\nYour noises have been noted for the record.")
 
         self.lock.acquire()
         phrase = np.hstack(self.phrase)
@@ -102,43 +96,12 @@ class MicDemo(IDemo):
             # print("onsets:", onsets)
             phrase = Phrase(notes, onsets)
 
-            ''' This is where you can randomize - Harrison '''
-            # phrase = self.process_midi_phrase(
-            #     phrase, self.randomness_temperature)
-
-            self.perform(phrase)
+            self.performance_handler.perform(phrase)
 
         self._process()
 
-    def perform(self, phrase):
-        # TODO: optimize this shit lmaooooo
-        prev_start = 0
-        m = 2
-        now = time.time()
-        for i in range(len(phrase)):
-            note = phrase.notes[i]
-            corrected_note = self.correct_note(note.pitch)
-            dly = max(0, ((note.start - prev_start) * m) - (time.time() - now))
-            print(f"Delaying by {dly} seconds")
-            self.event.wait(dly)
-            now = time.time()
-            self.lock.acquire()
-            playStringTemp(corrected_note)
-            self.lock.release()
-            prev_start = note.start
-
-    # Note Info:
-    # 9 - A
-    # 0 - C
-    # 2 - D
-    # 4 - E
-    # 7 - G
-
-    def correct_note(self, note):
-        scale = [4, 0, 9, 7, 2]
-        return scale.index(min(scale, key=lambda x: abs(x - (note % 12))))
-
-    def listener(self, in_data, frame_count, time_info, status):
+    def listener(self, in_data: bytes, frame_count: int, time_info: dict[str, float], status: int) -> tuple[
+            bytes, int]:
         if not self.active:
             self.reset_var()
             return in_data, pyaudio.paContinue

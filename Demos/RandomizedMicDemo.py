@@ -24,6 +24,7 @@ class RandomizedMicDemo(IDemo):
         self.midi_notes = []
         self.midi_onsets = []
 
+        self.performance_handler = PerformanceHandler()
         self.harrison_confusion_preventer = 1
 
         self.process_thread = Thread()
@@ -103,43 +104,10 @@ class RandomizedMicDemo(IDemo):
             # print("onsets:", onsets)
             phrase = Phrase(notes, onsets)
 
-            ''' This is where you can randomize - Harrison '''
-            # phrase = self.process_midi_phrase(
-            #     phrase, self.randomness_temperature)
-
             random_phrase = beat_randomizer(phrase)
-            self.perform(random_phrase)
+            self.performance_handler.perform(random_phrase)
 
         self._process()
-
-
-    def perform(self, phrase):
-        # TODO: optimize this shit lmaooooo
-        prev_start = 0
-        m = 2
-        now = time.time()
-        for i in range(len(phrase)):
-            note = phrase.notes[i]
-            corrected_note = self.correct_note(note.pitch)
-            dly = max(0, ((note.start - prev_start) * m) - (time.time() - now))
-            print(f"Delaying by {dly} seconds")
-            self.event.wait(dly)
-            now = time.time()
-            self.lock.acquire()
-            playStringTemp(corrected_note)
-            self.lock.release()
-            prev_start = note.start
-
-    # Note Info:
-    # 9 - A
-    # 0 - C
-    # 2 - D
-    # 4 - E
-    # 7 - G
-
-    def correct_note(self, note):
-        scale = [4, 0, 9, 7, 2]
-        return scale.index(min(scale, key=lambda x: abs(x - (note % 12))))
 
     def listener(self, in_data, frame_count, time_info, status):
         if not self.active:

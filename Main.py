@@ -20,8 +20,6 @@ class MedusaDemo:
         self.current_demo = self.voice_demo
 
     def run(self):
-        # setupRobots()
-        # startThreads()
         self.current_demo.start()
 
 
